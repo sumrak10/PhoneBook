@@ -12,11 +12,35 @@ from .schemas import Contact
 class AbstractRepository(ABC):
     strategy = None
 
+    @abstractmethod
+    def on_startup():
+        raise NotImplementedError
+    
+    @abstractmethod
+    def on_shutdown():
+        raise NotImplementedError
+    
+    @abstractmethod
+    def add():
+        raise NotImplementedError
+    
+    @abstractmethod
+    def find():
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_all():
+        raise NotImplementedError
+
+    @abstractmethod
+    def delete():
+        raise NotImplementedError
+
 # JSONStrategy('db.json')
 
 class ContactsRepository:
     def __init__(self) -> None:
-        self.strategy = JSONStrategy('db2.json')
+        self.strategy = JSONStrategy('db.json')
 
     def on_startup(self):
         self.strategy.connect()

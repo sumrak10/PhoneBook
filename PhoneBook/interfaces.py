@@ -257,22 +257,26 @@ class ContactsConsoleInterface(ContactsAbstractInterface):
 
         return input(" : ")
     
-    def add_contact_menu(self, remake:bool=False, first_name:str=None, middle_name:str=None ,last_name:str=None ,company:str=None ,work_phone:str=None ,personal_phone:str=None) -> None:
+    def add_contact_menu(self, contact: Contact = None) -> None:
         self.clear_screen()
         self.console.print("# Add contact menu")
-        if remake:
-            default=None
-        else:
-            default='y'
-        confirm = Confirm.ask("Are you sure you want to create a contact?", default=default)
+        confirm = Confirm.ask("Are you sure you want to create a contact?", default='y')
         if not confirm:
             return None
-        first_name = Prompt.ask("Enter first name", default=first_name)
-        middle_name = Prompt.ask("Enter middle name", default=middle_name)
-        last_name = Prompt.ask("Enter last name", default=last_name)
-        company = Prompt.ask("Enter company name", default=company)
-        work_phone = Prompt.ask("Enter work phone", default=work_phone)
-        personal_phone = Prompt.ask("Enter personal phone", default=personal_phone)
+        if contact is not None:
+            first_name = Prompt.ask("Enter first name", default=contact.first_name)
+            middle_name = Prompt.ask("Enter middle name", default=contact.middle_name)
+            last_name = Prompt.ask("Enter last name", default=contact.last_name)
+            company = Prompt.ask("Enter company name", default=contact.company)
+            work_phone = Prompt.ask("Enter work phone", default=contact.work_phone)
+            personal_phone = Prompt.ask("Enter personal phone", default=contact.personal_phone)
+        else:
+            first_name = Prompt.ask("Enter first name")
+            middle_name = Prompt.ask("Enter middle name")
+            last_name = Prompt.ask("Enter last name")
+            company = Prompt.ask("Enter company name")
+            work_phone = Prompt.ask("Enter work phone")
+            personal_phone = Prompt.ask("Enter personal phone")
         contact = Contact(
             first_name=first_name,
             middle_name=middle_name,
@@ -284,8 +288,9 @@ class ContactsConsoleInterface(ContactsAbstractInterface):
         self.console.print(contact)
         confirm = Confirm.ask("All OK? Save?")
         if not confirm:
-            contact = self.add_contact_menu(True, first_name, middle_name, last_name, company, work_phone, personal_phone)
-        if contact is not None and not remake:
+            contact = self.add_contact_menu(contact)
+            return None
+        if contact is not None:
             self.service.add(contact)
             self.empty_contacts = self.are_the_contacts_empty()
             self.status.update("Contact added!")

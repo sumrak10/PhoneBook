@@ -22,9 +22,15 @@ class ContactsService:
     # Events
     
     def on_startup(self) -> None:
+        """
+        Единоразово вызывается перед началом работы с приложением.
+        """
         self.repo.on_startup()
 
     def on_shutdown(self) -> None:
+        """
+        Единоразово вызвается в конце работы с приложением.
+        """
         self.repo.on_shutdown()
 
 
